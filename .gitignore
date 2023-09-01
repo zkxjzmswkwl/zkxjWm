@@ -3,4 +3,6 @@ out/*
 .vs/*
 .cache/*
 *.json
+cmake-*
+.idea/
 

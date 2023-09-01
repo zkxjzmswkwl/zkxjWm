@@ -7,10 +7,27 @@ enable_testing()
 
 file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
 
-add_executable(zkxjwm ${SOURCES})
+include(C:/Users/Carter/vcpkg/scripts/buildsystems/vcpkg.cmake)
+find_package(toml11 CONFIG REQUIRED)
+
+add_executable(zkxjwm ${SOURCES}
+        src/display.cpp
+        src/incl/display.h
+        src/incl/vec.h
+        src/config.cpp
+        src/incl/config.h
+        src/incl/windowconfig.h
+        src/incl/keyboardhook.h
+        src/incl/hotkeyconfig.h
+)
+set(EXECUTABLE_OUTPUT_PATH binary/)
 
 target_include_directories(zkxjwm PUBLIC src/incl)
+
+target_link_libraries(zkxjwm PRIVATE toml11::toml11)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
+
+

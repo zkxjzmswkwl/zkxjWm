@@ -1,20 +1,11 @@
 #pragma once
+#include "vec.h"
+#include "windowconfig.h"
+#include "display.h"
 #include <string>
+#include <vector>
 #include <windows.h>
 #include <memory>
-
-struct vec4i {
-    vec4i(int x, int y, int width, int height) : x{x}, y{y}, width{width}, height{height} {}
-    vec4i() {}
-    int x;
-    int y;
-    int width;
-    int height;
-
-    void print() {
-        printf("%d, %d, %d, %d\n", x, y, width, height);
-    }
-};
 
 struct keycombo {
     keycombo(int modifier, int key) : modifier(modifier), key(key) {}
@@ -27,13 +18,13 @@ class window {
 private:
     // Last polled, not always up to date, but should be when accessed.
     vec4i m_windowposition;
-    keycombo m_keycombo;
     HWND m_hwnd;
-    HANDLE m_prochandle;
     std::string m_title;
     bool m_visible;
+    windowconfig config;
 
 public:
+    enum { CENTERED, ABS, FIT, FIT_GAPS };
     window();
     window(HWND);
 
@@ -41,8 +32,12 @@ public:
     void refresh_position();
 
     HWND get_hwnd() { return m_hwnd; }
-    std::string * get_title() { return &m_title;  }
+    std::string get_title() { return m_title;  }
     vec4i * get_position() { return &m_windowposition;  }
+    windowconfig* get_config() { return &config; }
 
     static std::shared_ptr<window> make(HWND);
+    void set_position(int mode, int x, int y, display* display);
+
+    void unwindowsify();
 };

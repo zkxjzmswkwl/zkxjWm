@@ -6,23 +6,19 @@ template class std::shared_ptr<window>;
 window::window()
 {
     m_windowposition = vec4i{ 1, 1, 1, 1 } ;
-    m_keycombo = keycombo(0xA3, 'K');
 }
 
 window::window(HWND hwnd)
 {
-	printf("called window ctor w hwnd\n");
     this->m_hwnd = hwnd;
 }
 
 void window::populatefields()
 {
-	char aids[256];
+	char buffer[256];
 
-	GetWindowText(m_hwnd, aids, 256);
-	m_title = std::string(aids);
-
-	std::cout << m_title << "\n";
+	GetWindowText(m_hwnd, buffer, 256);
+	m_title = std::string(buffer);
 
 	RECT badtype;
 	if (GetWindowRect(this->m_hwnd, &badtype)) {
@@ -38,6 +34,28 @@ std::shared_ptr<window> window::make(HWND hwnd)
 	std::shared_ptr<window> windowptr = std::make_shared<window>(hwnd);
 	windowptr->populatefields();
 	return windowptr;
+}
+
+void window::set_position(int mode, int x, int y, display* display)
+{
+    auto [dispwidth, dispheight] = display->get_resolution()->as_tuple();
+    if (mode == CENTERED) {
+        m_windowposition = vec4i(
+                abs ( ( dispwidth / 2 ) - x / 2 ),
+                abs ( ( dispheight  ) - y  ) / 2,
+                x, y);
+    }
+
+    refresh_position();
+}
+
+void window::unwindowsify()
+{
+    LONG style = GetWindowLong(m_hwnd, GWL_STYLE);
+    style &= ~(WS_CAPTION | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU );
+    SetWindowLong(m_hwnd, GWL_STYLE, style);
+    // Need to force a repaint
+    refresh_position();
 }
 
 void window::refresh_position()
