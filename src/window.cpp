@@ -3,15 +3,11 @@
 
 template class std::shared_ptr<window>;
 
-window::window()
-{
-    store_current_title();
-    store_current_position();
-}
-
 window::window(HWND hwnd)
 {
     this->m_hwnd = hwnd;
+    store_current_title();
+    store_current_position();
 }
 
 void window::store_current_position()
@@ -19,6 +15,7 @@ void window::store_current_position()
     RECT badtype;
     auto result = GetWindowRect(this->m_hwnd, &badtype);
     if (!result) {
+        // 1400 = invalid hwnd
         printf("GetWindowRect(this->m_hwnd, &badtype) failed with error: %lu\n", GetLastError());
         return;
     }
@@ -55,7 +52,7 @@ void window::set_position(int mode, int x, int y, int displaywidth, int displayh
 {
     if (mode == CENTERED) {
         m_windowposition = vec4i(
-                abs ( ( displaywidth / 2 ) - x / 2 ),
+            abs ( ( displaywidth / 2 ) - x / 2 ),
                 abs ( ( displayheight  ) - y  ) / 2,
                 x, y);
     }
@@ -73,11 +70,21 @@ void window::unwindowsify()
     apply_position();
 }
 
-
-
-void window::resize_evenly(int amtx, int amty)
+/**
+ * @param amount - will grow the window if amount is positive, shrink if negative.
+ */
+void window::resize_evenly(int amount)
 {
-
+    store_current_position();
+    if (amount < 0) {
+        amount = abs(amount);
+        m_windowposition.width -= amount;
+        m_windowposition.x = m_windowposition.x + (amount / 2);
+    } else {
+        m_windowposition.width += amount;
+        m_windowposition.x = m_windowposition.x - (amount / 2);
+    }
+    apply_position();
 }
 
 

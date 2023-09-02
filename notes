@@ -1,3 +1,8 @@
+MAP
+	+ | Done
+	- | Not started
+	> | Working on it
+
 Things that are currently fucking dumb that I'd like to be less dumb
 
 - I was lazy and based everything around window title substrs rather than pids
@@ -15,10 +20,17 @@ Things that are currently fucking dumb that I'd like to be less dumb
 			- Benchmark current solution to see if it's as bad as I think it is.
 				- it probably is
 
-- Implement even growing/shrinking of in-focus window.
-	- For example if I want to make the in-focus window larger, I could assign a hotkey to do so.
-	- However, I don't want it to grow in one direction. I want the growth evenly split and the window repositioned.
++ Implement even growing/shrinking of in-focus window.
+	+ For example if I want to make the in-focus window larger, I could assign a hotkey to do so.
+	+ However, I don't want it to grow in one direction. I want the growth evenly split and the window repositioned.
 
 - Make centering actually configurable??
 
 - Rename WindowManager to windowmanager or some other shit that's at least consistent
+
+- Move HotKey registration to WindowManager or dedicate a class to it.
+
+- Refactor the message intake loop to not be spaghetti.
+	- Probably want an interface for actionables <-- nvm
+	- Probably want a list of std::functions and just index it with the hotkey ids.
+		- Means they have to be registerred in order though.

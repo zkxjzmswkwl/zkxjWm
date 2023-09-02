@@ -38,8 +38,6 @@ public:
         CENTERED, ABS, FIT, FIT_GAPS
     };
 
-    window();
-
     window(HWND);
 
     HWND get_hwnd() { return m_hwnd; }
@@ -54,7 +52,7 @@ public:
 
     void unwindowsify();
 
-    void resize_evenly(int amtx, int amty);
+    void resize_evenly(int amount);
 
     static std::shared_ptr<window> make(HWND);
 };

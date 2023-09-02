@@ -21,11 +21,12 @@ void WindowManager::store_windows()
 		if (!IsWindowVisible(topwin))
 			continue;
 
+        // Creating a string just to call length() is dumb as fuck given that we do the same operation later to store it.
 		char buf[256];
 		GetWindowText(topwin, buf, 256);
 		std::string title = std::string(buf);
 
-		if (title.length() > 1) {
+		if (title.length() > 3) {
 			std::shared_ptr<window> windowptr = window::make(topwin);
 			m_windows.push_back(windowptr);
 		}
@@ -84,6 +85,9 @@ void WindowManager::minimize_all_but(std::string target) {
     }
 }
 
-std::shared_ptr<WindowManager> WindowManager::make() {
+std::shared_ptr<WindowManager> WindowManager::make()
+{
     return std::make_shared<WindowManager>();
 }
+
+

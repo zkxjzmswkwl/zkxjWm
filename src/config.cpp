@@ -13,6 +13,7 @@ void config::parse()
     auto data = toml::parse("test.toml");
     const auto windowtables = toml::find<toml::array>(data, "window");
     const auto hotkeytables = toml::find<toml::array>(data, "hotkey");
+    const auto& growtable = toml::find(data, "grow");
 
     for (auto table : windowtables) {
         auto substr = toml::find<std::string>(table, "substr");
@@ -33,4 +34,7 @@ void config::parse()
         hotkeyconfig hkc(target, keycode);
         m_hotkeyconfigs.push_back(hkc);
     }
+
+    std::get<0>(m_resizeconfig) = toml::find<int>(growtable, "stepamount");
+    std::get<1>(m_resizeconfig) = toml::find<int>(growtable, "keycode");
 }
