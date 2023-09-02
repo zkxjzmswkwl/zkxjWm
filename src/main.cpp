@@ -6,17 +6,19 @@
 int main()
 {
     auto config = config::make();
-    auto currentdisplay = new display();
-	auto wm = new WindowManager();
-    auto hotkeyconfigs = config->get_hotkeyconfigs();
-    currentdisplay->refresh_resolution();
+    auto currentdisplay = display::make();
+    // Rename WindowManager to windowmanager or some other shit that's at least consistent
+	auto wm = WindowManager::make();
 
+    auto hotkeyconfigs = config->get_hotkeyconfigs();
+
+    // This is kinda fucking dumb
     int idx = 1;
     for (auto& hotkey : hotkeyconfigs) {
-        RegisterHotKey(NULL, idx, MOD_ALT | MOD_NOREPEAT, hotkey.keycode);
+        RegisterHotKey(0, idx, MOD_ALT | MOD_NOREPEAT, hotkey.keycode);
         idx++;
     }
-    printf("%d hotkeys loaded.\n", idx);
+    printf("%d hotkeys loaded.\n", idx - 1);
 
     MSG msg = {0};
     while (GetMessage(&msg, NULL, 0, 0) != 0) {

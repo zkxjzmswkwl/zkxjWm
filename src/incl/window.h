@@ -49,7 +49,7 @@ public:
 
     static std::shared_ptr<window> make(HWND);
 
-    void set_position(int mode, int x, int y, display *display);
+    void set_position(int mode, int x, int y, int displaywidth, int displayheight);
 
     void unwindowsify();
 };

@@ -13,7 +13,9 @@ public:
 
     void store_windows();
 
-    void apply_config_targeted(std::string, std::shared_ptr<config>, display *);
+    void apply_config_targeted(std::string, std::shared_ptr<config>, std::shared_ptr<display> display);
 
     void minimize_all_but(std::string);
+
+    static std::shared_ptr<WindowManager> make();
 };

@@ -42,7 +42,7 @@ std::vector<std::shared_ptr<window>> & WindowManager::get_windows()
 	return m_windows;
 }
 
-void WindowManager::apply_config_targeted(std::string substr, std::shared_ptr<config> config, display* display)
+void WindowManager::apply_config_targeted(std::string substr, std::shared_ptr<config> config, std::shared_ptr<display> display)
 {
     for (auto& window : get_windows()) {
         if (!window->get_title().contains(substr))  continue;
@@ -58,12 +58,14 @@ void WindowManager::apply_config_targeted(std::string substr, std::shared_ptr<co
 
         ShowWindow(window->get_hwnd(), SW_RESTORE);
         SetForegroundWindow(window->get_hwnd());
+        auto [displaywidth, displayheight] = display->get_resolution()->as_tuple();
 
         window->set_position(
                 window::CENTERED,
                 wc.size.at(0),
                 wc.size.at(1),
-                display);
+                displaywidth,
+                displayheight);
 
         if (wc.minimizeAll) {
             minimize_all_but(window->get_title());
@@ -81,4 +83,8 @@ void WindowManager::minimize_all_but(std::string target) {
         if (window->get_title().contains(target)) continue;
         ShowWindow(window->get_hwnd(), SW_MINIMIZE);
     }
+}
+
+std::shared_ptr<WindowManager> WindowManager::make() {
+    return std::make_shared<WindowManager>();
 }

@@ -36,13 +36,12 @@ std::shared_ptr<window> window::make(HWND hwnd)
 	return windowptr;
 }
 
-void window::set_position(int mode, int x, int y, display* display)
+void window::set_position(int mode, int x, int y, int displaywidth, int displayheight)
 {
-    auto [dispwidth, dispheight] = display->get_resolution()->as_tuple();
     if (mode == CENTERED) {
         m_windowposition = vec4i(
-                abs ( ( dispwidth / 2 ) - x / 2 ),
-                abs ( ( dispheight  ) - y  ) / 2,
+                abs ( ( displaywidth / 2 ) - x / 2 ),
+                abs ( ( displayheight  ) - y  ) / 2,
                 x, y);
     }
 
@@ -54,7 +53,8 @@ void window::unwindowsify()
     LONG style = GetWindowLong(m_hwnd, GWL_STYLE);
     style &= ~(WS_CAPTION | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU );
     SetWindowLong(m_hwnd, GWL_STYLE, style);
-    // Need to force a repaint
+    // In order for the style change to take, we need to force a repaint of the window.
+    // Refreshing the window's position does so, so long as `bRepaint` is true.
     refresh_position();
 }
 
