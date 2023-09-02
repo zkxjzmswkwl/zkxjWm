@@ -5,7 +5,8 @@ template class std::shared_ptr<window>;
 
 window::window()
 {
-    m_windowposition = vec4i{ 1, 1, 1, 1 } ;
+    store_current_title();
+    store_current_position();
 }
 
 window::window(HWND hwnd)
@@ -13,26 +14,40 @@ window::window(HWND hwnd)
     this->m_hwnd = hwnd;
 }
 
-void window::populatefields()
+void window::store_current_position()
 {
-	char buffer[256];
+    RECT badtype;
+    auto result = GetWindowRect(this->m_hwnd, &badtype);
+    if (!result) {
+        printf("GetWindowRect(this->m_hwnd, &badtype) failed with error: %lu\n", GetLastError());
+        return;
+    }
+    m_windowposition.width = badtype.right - badtype.left;
+    m_windowposition.height = badtype.bottom - badtype.top;
+    m_windowposition.x = badtype.left;
+    m_windowposition.y = badtype.top;
+}
 
-	GetWindowText(m_hwnd, buffer, 256);
-	m_title = std::string(buffer);
+void window::store_current_title()
+{
+    char buffer[256];
+    GetWindowText(m_hwnd, buffer, 256);
+    m_title = std::string(buffer);
+}
 
-	RECT badtype;
-	if (GetWindowRect(this->m_hwnd, &badtype)) {
-		m_windowposition.width = badtype.right - badtype.left;
-		m_windowposition.height = badtype.bottom - badtype.top;
-		m_windowposition.x = badtype.left;
-		m_windowposition.y = badtype.top;
-	}
+void window::apply_position()
+{
+    MoveWindow(m_hwnd,
+               m_windowposition.x,
+               m_windowposition.y,
+               m_windowposition.width,
+               m_windowposition.height,
+               TRUE);
 }
 
 std::shared_ptr<window> window::make(HWND hwnd)
 {
 	std::shared_ptr<window> windowptr = std::make_shared<window>(hwnd);
-	windowptr->populatefields();
 	return windowptr;
 }
 
@@ -45,7 +60,7 @@ void window::set_position(int mode, int x, int y, int displaywidth, int displayh
                 x, y);
     }
 
-    refresh_position();
+    apply_position();
 }
 
 void window::unwindowsify()
@@ -55,15 +70,37 @@ void window::unwindowsify()
     SetWindowLong(m_hwnd, GWL_STYLE, style);
     // In order for the style change to take, we need to force a repaint of the window.
     // Refreshing the window's position does so, so long as `bRepaint` is true.
-    refresh_position();
+    apply_position();
 }
 
-void window::refresh_position()
+
+
+void window::resize_evenly(int amtx, int amty)
 {
-	MoveWindow(m_hwnd,
-		m_windowposition.x,
-		m_windowposition.y,
-		m_windowposition.width,
-		m_windowposition.height,
-		TRUE);
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

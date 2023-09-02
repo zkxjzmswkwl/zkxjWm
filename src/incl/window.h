@@ -26,6 +26,13 @@ private:
     bool m_visible;
     windowconfig config;
 
+protected:
+    void store_current_title();
+
+    void store_current_position();
+
+    void apply_position();
+
 public:
     enum {
         CENTERED, ABS, FIT, FIT_GAPS
@@ -35,10 +42,6 @@ public:
 
     window(HWND);
 
-    void populatefields();
-
-    void refresh_position();
-
     HWND get_hwnd() { return m_hwnd; }
 
     std::string get_title() { return m_title; }
@@ -47,9 +50,11 @@ public:
 
     windowconfig *get_config() { return &config; }
 
-    static std::shared_ptr<window> make(HWND);
-
     void set_position(int mode, int x, int y, int displaywidth, int displayheight);
 
     void unwindowsify();
+
+    void resize_evenly(int amtx, int amty);
+
+    static std::shared_ptr<window> make(HWND);
 };
