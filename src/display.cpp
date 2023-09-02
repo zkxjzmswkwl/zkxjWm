@@ -16,8 +16,8 @@ void display::refresh_resolution()
     m_resolution = vec2i(badtype.right, badtype.bottom);
 }
 
-vec2i *display::get_resolution() {
-    return &m_resolution;
+vec2i & display::get_resolution() {
+    return m_resolution;
 }
 
 std::shared_ptr<display> display::make() {

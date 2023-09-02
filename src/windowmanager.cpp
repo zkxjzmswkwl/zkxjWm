@@ -5,11 +5,9 @@
 
 static BOOL CALLBACK enumeration_callback(HWND hwnd, LPARAM lparam)
 {
-	char buffer[256];
 	HWND owner = GetWindow(hwnd, GW_OWNER);
 
 	if (IsWindowVisible(owner)) {
-		GetWindowText(owner, buffer, 256);
 		std::shared_ptr<window> windowptr = window::make(hwnd);
 	}
 	return TRUE;
@@ -47,18 +45,19 @@ void WindowManager::apply_config_targeted(std::string substr, std::shared_ptr<co
     for (auto& window : get_windows()) {
         if (!window->get_title().contains(substr))  continue;
 
+        // Region - This is fucked
         windowconfig wc;
-
         for (auto& wconfig : config->get_windowconfigs()) {
             if (wconfig.substr == substr) {
                 wc = wconfig;
                 break;
             }
         }
+        // End Region
 
         ShowWindow(window->get_hwnd(), SW_RESTORE);
         SetForegroundWindow(window->get_hwnd());
-        auto [displaywidth, displayheight] = display->get_resolution()->as_tuple();
+        auto [displaywidth, displayheight] = display->get_resolution().as_tuple();
 
         window->set_position(
                 window::CENTERED,

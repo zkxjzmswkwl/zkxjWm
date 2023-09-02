@@ -21,7 +21,7 @@ int main()
     printf("%d hotkeys loaded.\n", idx - 1);
 
     MSG msg = {0};
-    while (GetMessage(&msg, NULL, 0, 0) != 0) {
+    while (GetMessage(&msg, 0, 0, 0) != 0) {
         if (msg.message == WM_HOTKEY) {
             auto hkc = hotkeyconfigs.at(msg.wParam - 1);
             wm->apply_config_targeted(hkc.target, config, currentdisplay);

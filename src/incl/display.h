@@ -11,7 +11,7 @@ public:
 
     void refresh_resolution();
 
-    vec2i *get_resolution();
+    vec2i & get_resolution();
 
     static std::shared_ptr<display> make();
 };
