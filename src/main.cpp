@@ -14,27 +14,27 @@ int main()
     printf("%d/%d/%d\n", resize_stepamount, resize_keycode, resize_shrink);
 
     // This is kinda fucking dumb
-    int idx = 1;
+    int idx = 0;
     for (auto& hotkey : hotkeyconfigs) {
-        RegisterHotKey(0, idx, MOD_ALT | MOD_NOREPEAT, hotkey.first);
-        idx++;
+        RegisterHotKey(0, idx++, MOD_ALT | MOD_NOREPEAT, hotkey.first);
     }
 
     // temp hack: Register [grow] hotkey
     RegisterHotKey(0, idx++, MOD_ALT | MOD_NOREPEAT, resize_keycode);
     RegisterHotKey(0, idx++, MOD_ALT | MOD_SHIFT | MOD_NOREPEAT, resize_keycode);
 
+    int configcount = hotkeyconfigs.size();
     MSG msg = {0};
     while (GetMessage(&msg, 0, 0, 0) != 0) {
         if (msg.message != WM_HOTKEY) {
             continue;
         }
 
-        if (msg.wParam == 3 || msg.wParam == 4) {
+        if (msg.wParam >= configcount) {
             // temp hack: This is a waste currently. `window` is destroyed immediately.
             auto currentwindow = window::make(GetForegroundWindow());
             auto modifier_loword = LOWORD(msg.lParam);
-            // If the modifier key used was just ALT
+            // If only ALT was passed as a modifier.
             if (modifier_loword != 1) {
                 currentwindow->resize_evenly(resize_stepamount);
                 continue;
