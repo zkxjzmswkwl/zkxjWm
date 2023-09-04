@@ -1,11 +1,14 @@
 #include "config.h"
 #include <toml.hpp>
 
+config::config()
+{
+    this->parse();
+}
+
 std::shared_ptr<config> config::make()
 {
-    auto shared = std::make_shared<config>();
-    shared->parse();
-    return shared;
+    return std::make_shared<config>();
 }
 
 void config::parse()
@@ -31,10 +34,10 @@ void config::parse()
     for (auto table : hotkeytables) {
         auto target = toml::find<std::string>(table, "target");
         auto keycode = toml::find<int>(table, "keycode");
-        hotkeyconfig hkc(target, keycode);
-        m_hotkeyconfigs.push_back(hkc);
+        m_hotkeyconfigs[keycode] = target;
     }
 
     std::get<0>(m_resizeconfig) = toml::find<int>(growtable, "stepamount");
     std::get<1>(m_resizeconfig) = toml::find<int>(growtable, "keycode");
+    std::get<2>(m_resizeconfig) = toml::find<int>(growtable, "shrink");
 }

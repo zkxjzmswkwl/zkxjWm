@@ -18,13 +18,14 @@ Things that are currently fucking dumb that I'd like to be less dumb
 	- this is fucking dumb.
 		- Does Windows have a better way to do this?
 			- Benchmark current solution to see if it's as bad as I think it is.
-				- it probably is
+			- it probably is
 
 + Implement even growing/shrinking of in-focus window.
 	+ For example if I want to make the in-focus window larger, I could assign a hotkey to do so.
 	+ However, I don't want it to grow in one direction. I want the growth evenly split and the window repositioned.
+	+ Haven't done shrinking yet for some reason? done now
 
-- Make centering actually configurable??
+> Make centering actually configurable??
 
 - Rename WindowManager to windowmanager or some other shit that's at least consistent
 
