@@ -49,8 +49,8 @@ void WindowManager::apply_config_targeted(std::string substr, std::shared_ptr<co
         // Region - This is fucked
         windowconfig wc;
         for (auto& wconfig : config->get_windowconfigs()) {
-            if (wconfig.substr == substr) {
-                wc = wconfig;
+            if (wconfig.second.substr == substr) {
+                wc = wconfig.second;
                 break;
             }
         }

@@ -17,7 +17,6 @@ add_executable(zkxjwm ${SOURCES}
         src/config.cpp
         src/incl/config.h
         src/incl/windowconfig.h
-        src/incl/hotkeyconfig.h
 )
 set(EXECUTABLE_OUTPUT_PATH binary/)
 

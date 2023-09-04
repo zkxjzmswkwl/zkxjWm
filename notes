@@ -8,7 +8,7 @@ Things that are currently fucking dumb that I'd like to be less dumb
 - I was lazy and based everything around window title substrs rather than pids
 	- Issues caused by this include
 		- If you have a window open that has the same substr as the target window, you're going to have a bad time.
-		- Configuration fuckery
+		+ Configuration fuckery
 
 - I don't think I want to use toml for the config file. I hate change.
 	- Doesn't matter right now. No one uses this but me.

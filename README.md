@@ -1,29 +1,26 @@
 ## Example config
 
 ```toml
+# Default and currently unchangable mod key is ALT.
+
 [[window]]
 substr = "Discord"
 size = [2560, 1300]
 center = true
 borderless = false
 minimizeAll = false
+keycode = 49     # 0x31 (1)
 
 [[window]]
 substr = "RuneScape"
-size = [5000, 1250]
-center = true
-borderless = true
-minimizeAll = true
+size = [1500, 1000]
+center = false
+borderless = false 
+minimizeAll = true 
+keycode = 54     # 0x36 (6)
 
-[[hotkey]]
-target = "RuneScape"
-keycode = 36 # 36 = 0x24 = VK_HOME
-
-[[hotkey]]
-target = "Discord"
-keycode = 49 # 43 = 0x31 = 1
-
+# Holding shift will shrink the window, not will grow it.
 [grow]
-stepamount = 100 # amount to grow the window each step
-keycode = 50 # 50 = 0x32 = 2
+stepamount = 300 # amount to grow or shrink the window by each step
+keycode = 50     # 0x32 (2)
 ```
