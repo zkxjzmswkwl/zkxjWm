@@ -50,13 +50,20 @@ std::shared_ptr<window> window::make(HWND hwnd)
 
 void window::set_position(int mode, int x, int y, int displaywidth, int displayheight)
 {
-    if (mode == CENTERED) {
-        m_windowposition = vec4i(
-            abs ( ( displaywidth / 2 ) - x / 2 ),
-                abs ( ( displayheight  ) - y  ) / 2,
-                x, y);
+    switch (mode) {
+        case CENTERED: {
+            m_windowposition = vec4i(
+                    abs ( ( displaywidth / 2 ) - x / 2 ),
+                    abs ( ( displayheight  ) - y  ) / 2,
+                    x, y);
+        }break;
+        case ABS:
+        case FIT:
+        case FIT_GAPS:
+        default: {
+            m_windowposition = vec4i(m_windowposition.x, m_windowposition.y, x, y);
+        }break;
     }
-
     apply_position();
 }
 

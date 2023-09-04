@@ -26,22 +26,24 @@ int main()
 
     MSG msg = {0};
     while (GetMessage(&msg, 0, 0, 0) != 0) {
-        if (msg.message == WM_HOTKEY) {
-            if (msg.wParam == 3 || msg.wParam == 4) {
-                // temp hack: This is a waste currently. `window` is destroyed immediately.
-                auto currentwindow = window::make(GetForegroundWindow());
-                if (GetAsyncKeyState(resize_shrink)) {
-                    currentwindow->resize_evenly(resize_stepamount * -1);
-                } else {
-                    currentwindow->resize_evenly(resize_stepamount);
-                }
-            } else {
-                // Currently no way to easily check what hotkeys are registered,
-                // we just have the vector containing the hotkeyconfig objects.
-                // Their indices are assumed at runtime, which is shit.
-                SHORT keycode = HIWORD(msg.lParam);
-                wm->apply_config_targeted(hotkeyconfigs.at(keycode), config, currentdisplay);
+        if (msg.message != WM_HOTKEY) {
+            continue;
+        }
+
+        if (msg.wParam == 3 || msg.wParam == 4) {
+            // temp hack: This is a waste currently. `window` is destroyed immediately.
+            auto currentwindow = window::make(GetForegroundWindow());
+            auto modifier_loword = LOWORD(msg.lParam);
+            // If the modifier key used was just ALT
+            if (modifier_loword != 1) {
+                currentwindow->resize_evenly(resize_stepamount);
+                continue;
             }
+            // If it was any other combinations of modifiers.
+            currentwindow->resize_evenly(resize_stepamount * -1);
+        } else {
+            SHORT keycode = HIWORD(msg.lParam);
+            wm->apply_config_targeted(hotkeyconfigs.at(keycode), config, currentdisplay);
         }
     }
 }

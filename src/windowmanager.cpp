@@ -58,14 +58,20 @@ void WindowManager::apply_config_targeted(std::string substr, std::shared_ptr<co
 
         ShowWindow(window->get_hwnd(), SW_RESTORE);
         SetForegroundWindow(window->get_hwnd());
-        auto [displaywidth, displayheight] = display->get_resolution().as_tuple();
 
-        window->set_position(
-                window::CENTERED,
-                wc.size.at(0),
-                wc.size.at(1),
-                displaywidth,
-                displayheight);
+        if (wc.center) {
+            auto [displaywidth, displayheight] = display->get_resolution().as_tuple();
+            window->set_position(
+                    window::CENTERED,
+                    wc.size.at(0),
+                    wc.size.at(1),
+                    displaywidth,
+                    displayheight);
+        } else {
+            // TODO: Filler values 0,0 - not actually used unless window::CENTERED passed as mode.
+            // Fix them being required.
+            window->set_position(window::ABS, wc.size.at(0), wc.size.at(1), 0, 0);
+        }
 
         if (wc.minimizeAll) {
             minimize_all_but(window->get_title());
